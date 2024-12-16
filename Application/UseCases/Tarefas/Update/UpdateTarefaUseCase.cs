@@ -1,24 +1,19 @@
 ﻿using Communication.Request;
-using Communication.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models;
 
 namespace Application.UseCases.Tarefas.Update;
 
 public class UpdateTarefaUseCase
 {
-    public ResponseTarefa Execute(Guid id, RequestUpdateTarefa request)
+    private readonly TarefasRepository _repository = new();
+
+    public void Execute(Guid id, RequestUpdateTarefa request)
     {
-        return new ResponseTarefa(request.Nome)
-        {
-            Id = id,
-            Descricao = request.Descricao,
-            DataLimite = request.DataLimite,
-            PrioridadeEnum = request.PrioridadeEnum,
-            Status = request.Status,
-        };
+        var tarefa  = _repository.GetById(id) ?? throw new Exception("Tarefa não encontrada");
+        tarefa.Nome = request.Nome;
+        tarefa.Descricao = request.Descricao;
+        tarefa.DataLimite = request.DataLimite;
+        tarefa.PrioridadeEnum = request.PrioridadeEnum;
+        tarefa.Status = request.Status;
     }
 }

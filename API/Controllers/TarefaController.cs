@@ -6,6 +6,7 @@ using Application.UseCases.Tarefas.Update;
 using Communication.Request;
 using Communication.Response;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace API.Controllers
 {
@@ -13,11 +14,11 @@ namespace API.Controllers
     [Route("[controller]")]
     public class TarefaController : ControllerBase
     {
-        private RegisterTarefaUseCase _registerUseCase;
-        private UpdateTarefaUseCase _updateUseCase;
-        private GetAllTarefaUseCase _getAllUseCase;
-        private GetTarefaByIdUseCase _getByIdUseCase;
-        private DeleteTarefaUseCase _deleteUseCase;
+        private readonly RegisterTarefaUseCase _registerUseCase;
+        private readonly UpdateTarefaUseCase _updateUseCase;
+        private readonly GetAllTarefaUseCase _getAllUseCase;
+        private readonly GetTarefaByIdUseCase _getByIdUseCase;
+        private readonly DeleteTarefaUseCase _deleteUseCase;
 
         public TarefaController()
         {
@@ -28,41 +29,35 @@ namespace API.Controllers
             _deleteUseCase = new DeleteTarefaUseCase();
             
         }
-        /*
-- Deve ser possível criar uma tarefa;
-- Deve ser possível visualizar todas as tarefas criadas;
-- Deve ser possível visualizar uma tarefa buscando pelo seu id;
-- Deve ser possível editar informações de uma tarefa;
-- Deve ser possível excluir uma tarefa.
-    */
 
         [HttpGet]
-        [ProducesResponseType<ResponseAllTarefas>(StatusCodes.Status200OK)]
-        [ProducesResponseType<ResponseAllTarefas>(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<List<Tarefa>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Tarefa>(StatusCodes.Status204NoContent)]
         [ProducesResponseType<ResponseErrors>(StatusCodes.Status400BadRequest)]
         public IActionResult Index()
         {
-            var response = _getAllUseCase.Execute();
+            var tarefas = _getAllUseCase.Execute();
             
-            if (!response.Tarefas.Any()) return NoContent();
+            if (tarefas.Count == 0) return NoContent();
 
-            return Ok(response);
+            return Ok(tarefas);
         }
 
         [HttpGet]
         [Route("{id}")]
-        [ProducesResponseType<ResponseTarefa>(StatusCodes.Status200OK)]
+        [ProducesResponseType<Tarefa>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType<ResponseErrors>(StatusCodes.Status400BadRequest)]
         public IActionResult Get(Guid id)
         {
             var tarefa = _getByIdUseCase.Execute(id);
+            if (tarefa is null) return NotFound();
             return Ok(tarefa);
         }
 
 
         [HttpPost]
-        [ProducesResponseType(typeof(ResponseRegisterTarefa), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Tarefa), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErrors), StatusCodes.Status400BadRequest)]
         public IActionResult Create([FromBody] RequestRegisterTarefa tarefa)
         {
@@ -72,7 +67,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        [ProducesResponseType(typeof(ResponseTarefa), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ResponseErrors), StatusCodes.Status400BadRequest)]
         public IActionResult Update([FromRoute] Guid id, [FromBody] RequestUpdateTarefa tarefa)
         {
@@ -82,7 +77,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [ProducesResponseType<ResponseTarefa>(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete([FromRoute] Guid id)
         {

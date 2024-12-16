@@ -6,8 +6,10 @@ namespace Application.UseCases.Tarefas.Register;
 
 public class RegisterTarefaUseCase
 {
-    public ResponseRegisterTarefa Execute(RequestRegisterTarefa request)
+    private readonly TarefasRepository _repository = new();
+   
+    public Tarefa Execute(RequestRegisterTarefa request)
     {
-        return new ResponseRegisterTarefa(Guid.NewGuid(), request.Nome);
+        return _repository.Add(request);
     }
 }

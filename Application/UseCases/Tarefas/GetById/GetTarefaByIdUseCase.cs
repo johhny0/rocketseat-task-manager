@@ -1,11 +1,14 @@
 ﻿using Communication.Response;
+using Models;
 
 namespace Application.UseCases.Tarefas.GetById;
 
 public class GetTarefaByIdUseCase
 {
-    public ResponseTarefa Execute(Guid id)
+    private readonly TarefasRepository _repository = new();
+
+    public Tarefa? Execute(Guid id)
     {
-        return new ResponseTarefa("") { Id = id };
+        return _repository.GetById(id);
     }
 }

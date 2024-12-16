@@ -2,9 +2,10 @@
 
 GET {{API_HostAddress}}/tarefa/ HTTP/1.1
 Accept: application/json
-
 ###
-
+GET {{API_HostAddress}}/tarefa/a1e58926-7556-42e6-a568-c3686265ada6 HTTP/1.1
+Accept: application/json
+###
 POST {{API_HostAddress}}/tarefa/ HTTP/1.1
 Content-Type: application/json
 {
@@ -13,13 +14,15 @@ Content-Type: application/json
    "prioridadeEnum": 1,
    "dataLimite": "2024-11-18"
 }
-
 ###
-PUT {{API_HostAddress}}/tarefa/ HTTP/1.1
+PUT {{API_HostAddress}}/tarefa/a1e58926-7556-42e6-a568-c3686265ada6 HTTP/1.1
 Content-Type: application/json
 {
-   "nome": "Nome2",
-   "descricao": "Descricao",
-   "prioridadeEnum": 1,
-   "dataLimite": "2024-11-18"
+   "nome": "Nome3",
+   "descricao": "Descricao3",
+   "prioridadeEnum": 2,
+   "dataLimite": "2024-12-18"
 }
+###
+DELETE {{API_HostAddress}}/tarefa/a1e58926-7556-42e6-a568-c3686265ada6
+Content-Type: application/json

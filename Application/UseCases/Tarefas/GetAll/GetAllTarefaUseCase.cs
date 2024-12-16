@@ -1,19 +1,14 @@
 ﻿using Communication.Response;
+using Models;
 
 namespace Application.UseCases.Tarefas.GetAll;
 
 public class GetAllTarefaUseCase
 {
-    public ResponseAllTarefas Execute()
+    private readonly TarefasRepository _repository = new();
+
+    public List<Tarefa> Execute()
     {
-        return new ResponseAllTarefas()
-        {
-            Tarefas = [
-                new  ResponseShortTarefa(){ Id = Guid.NewGuid(), Nome = "Ola" },
-                new  ResponseShortTarefa(){ Id = Guid.NewGuid(), Nome = "Ola" },
-                new  ResponseShortTarefa(){ Id = Guid.NewGuid(), Nome = "Ola" },
-                new  ResponseShortTarefa(){ Id = Guid.NewGuid(), Nome = "Ola" },
-                ]
-        };
+       return _repository.GetAll();
     }
 }
